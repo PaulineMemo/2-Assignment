@@ -33,7 +33,7 @@ y=data['Exited']
 
 ## Handling imbalanced data
 
-from imblearn.over_sampling import SMOTE
+#from imblearn.over_sampling import SMOTE
 X_res,y_res=SMOTE().fit_resample(X,y)
 
 X_res.value_counts()
