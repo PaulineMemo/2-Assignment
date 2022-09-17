@@ -122,12 +122,12 @@ f1_score(y_test,y_pred2)
 #f1_score(y_test,y_pred6)
 
 #final_data= pd.DataFrame({'Models':["LR","SVC","KNN","DT","RF","GBC"],
-                         "ACC":[accuracy_score(y_test,y_pred1),
-                               accuracy_score(y_test,y_pred2),
-                               accuracy_score(y_test,y_pred3),
-                               accuracy_score(y_test,y_pred4),
-                               accuracy_score(y_test,y_pred5),
-                               accuracy_score(y_test,y_pred6)]})
+                         #"ACC":[accuracy_score(y_test,y_pred1),
+                               #accuracy_score(y_test,y_pred2),
+                               #accuracy_score(y_test,y_pred3),
+                               #accuracy_score(y_test,y_pred4),
+                               #accuracy_score(y_test,y_pred5),
+                               #accuracy_score(y_test,y_pred6)]})
 #st.write('final_data')
 
 ## Saving the model
