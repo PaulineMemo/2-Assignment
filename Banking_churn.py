@@ -34,22 +34,22 @@ y=data['Exited']
 ## Handling imbalanced data
 
 #from imblearn.over_sampling import SMOTE
-X_res,y_res=SMOTE().fit_resample(X,y)
+#X_res,y_res=SMOTE().fit_resample(X,y)
 
-X_res.value_counts()
-y_res.value_counts()
+#X_res.value_counts()
+#y_res.value_counts()
 
 ## Splitting Data
-from sklearn.model_selection import train_test_split
-X_train,X_test,y_train,y_test=train_test_split(X_res, y_res, test_size=0.2, random_state=42)
+#from sklearn.model_selection import train_test_split
+#X_train,X_test,y_train,y_test=train_test_split(X_res, y_res, test_size=0.2, random_state=42)
 
 ## Feature scaling
-from sklearn.preprocessing import StandardScaler
+#from sklearn.preprocessing import StandardScaler
 
-sc=StandardScaler()
+#sc=StandardScaler()
 
-X_train=sc.fit_transform(X_train)
-X_test = sc.transform(X_test)
+#X_train=sc.fit_transform(X_train)
+#X_test = sc.transform(X_test)
 #X_train
 
 
