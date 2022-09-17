@@ -1,93 +1,194 @@
 import pandas as pd
 import streamlit as st
-from sklearn.preprocessing import StandardScaler
-from sklearn.compose import ColumnTransformer
-from sklearn.pipeline import Pipeline
-from sklearn.impute import SimpleImputer
-from sklearn.preprocessing import OneHotEncoder
-from sklearn.decomposition import PCA
-from sklearn import svm
-
-from sklearn.ensemble import RandomForestClassifier as rfc
-from sklearn.model_selection import train_test_split, GridSearchCV
-from sklearn.svm import SVC as svc
-from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import classification_report,accuracy_score,confusion_matrix
-
+from Tools.scripts.parseentities import writefile
 import numpy as np
 
-data=pd.read_csv('https://raw.githubusercontent.com/regan-mu/ADS-April-2022/main/Assignments/Assignment%202/banking_churn.csv')
-st.write(data.head())
-st.write(data.describe())
-st.write(data.isna().sum())
+st.set_page_config(layout="wide", initial_sidebar_state="expanded",
+                   page_title='Banking-Churn-Model App')
 
-#Removing columns that have no effect on customer churn
-(data.drop(['RowNumber','CustomerId','Surname'], axis=1, inplace=True))
-st.write(data.head())
-st.write(data.describe())
-st.write(data.groupby('Exited').mean())
+data = pd.read_csv('https://raw.githubusercontent.com/regan-mu/ADS-April-2022/main/Assignments/Assignment%202/banking_churn.csv')
+data.head()
 
-st.write("Create one hot encoded columns for Geography and Gender")
+data.describe(include='all')
 
-# convert categorical columns in text to numerical values i.e Gender and Geography
-tempdata=data.drop(['Geography','Gender'], axis=1)
-st.write(tempdata)
-Geography=pd.get_dummies(data.Geography).iloc[:,1:]
-Gender=pd.get_dummies(data.Gender).iloc[:,1:]
+data.info()
 
-data1=pd.concat([tempdata,Geography,Gender], axis=1)
-st.write(data1.head())
+#data.shape
 
-#separating the features and labels
+#print("Number of rows", data.shape[0])
+#print("Number of columns", data.shape[1])
 
-#splitting the data
-x_train = data1.drop(['Exited'], axis=1)
-y_train = data1['Exited']
-x_train, x_test, y_train, y_test = train_test_split(x_train, y_train, test_size=0.2, random_state=21)
+data.isnull().sum()
+#data.columns
 
-st.write(x_train.head())
-st.write(y_train.head())
+data=data.drop(['RowNumber', 'CustomerId', 'Surname'], axis=1)
 
-st.write(x_train.shape, x_test.shape, y_train.shape, y_test.shape)
+data.head()
 
-#Training and modelling the train data
+data=pd.get_dummies(data,drop_first=True)
+data.head()
+data['Exited'].value_counts()
 
-classifier=rfc(n_estimators=200, random_state=0)
-classifier.fit(x_train,y_train)
-predicted_labels = classifier.predict(x_test)
+X=data.drop('Exited', axis=1)
+y=data['Exited']
 
-from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
-st.write((classification_report(y_test, predicted_labels)))
-st.write((confusion_matrix(y_test, predicted_labels)))
-st.write((accuracy_score(y_test, predicted_labels)))
-from sklearn.svm import SVC as svc
+## Handling imbalanced data
 
-st.write("Train the model using support vector machines:")
-svc_object = svc(kernel='rbf', degree=8)
-svc_object.fit(x_train, y_train)
-predicted_labels = svc_object.predict(x_test)
-st.write((classification_report(y_test, predicted_labels)))
-st.write((confusion_matrix(y_test, predicted_labels)))
-st.write((accuracy_score(y_test, predicted_labels)))
+from imblearn.over_sampling import SMOTE
+X_res,y_res=SMOTE().fit_resample(X,y)
 
-st.write("Train the model using logistic regression:")
+X_res.value_counts()
+y_res.value_counts()
+
+## Splitting Data
+from sklearn.model_selection import train_test_split
+X_train,X_test,y_train,y_test=train_test_split(X_res, y_res, test_size=0.2, random_state=42)
+
+## Feature scaling
+from sklearn.preprocessing import StandardScaler
+
+sc=StandardScaler()
+
+X_train=sc.fit_transform(X_train)
+X_test = sc.transform(X_test)
+#X_train
+
+
+##Training the model
+
+##Logistic Regression
+
 from sklearn.linear_model import LogisticRegression
-lr_object = LogisticRegression()
-lr_object.fit(x_train, y_train)
-predicted_labels = lr_object.predict(x_test)
-st.write((classification_report(y_test, predicted_labels)))
-st.write((confusion_matrix(y_test, predicted_labels)))
-st.write((accuracy_score(y_test, predicted_labels)))
+lr=LogisticRegression()
+lr.fit(X_train, y_train)
 
+y_pred1=lr.predict(X_test)
 
-st.sidebar.title("Customer Banking Churn App")
+from sklearn.metrics import precision_score, recall_score,f1_score,accuracy_score
+accuracy_score(y_test,y_pred1)
+precision_score(y_test,y_pred1)
+recall_score(y_test,y_pred1)
+f1_score(y_test,y_pred1)
+## SVC
+from sklearn import svm
+svm = svm.SVC()
+svm.fit(X_train, y_train)
+y_pred2 = svm.predict(X_test)
+accuracy_score(y_test,y_pred2)
+precision_score(y_test,y_pred2)
+recall_score(y_test,y_pred2)
+f1_score(y_test,y_pred2)
 
+##KNeighbors Classifier
+from sklearn.neighbors import KNeighborsClassifier
+knn=KNeighborsClassifier()
+knn.fit(X_train, y_train)
+y_pred3=knn.predict(X_test)
+accuracy_score(y_test,y_pred3)
+precision_score(y_test,y_pred3)
+recall_score(y_test,y_pred3)
+f1_score(y_test,y_pred3)
+
+##DecisionTreeClassifier
+
+from sklearn.tree import DecisionTreeClassifier
+dt=DecisionTreeClassifier()
+dt.fit(X_train, y_train)
+y_pred4=dt.predict(X_test)
+accuracy_score(y_test,y_pred4)
+precision_score(y_test,y_pred4)
+recall_score(y_test,y_pred4)
+f1_score(y_test,y_pred4)
+
+##RandomForestClassifier
+from sklearn.ensemble import RandomForestClassifier
+rf=RandomForestClassifier()
+rf.fit(X_train,y_train)
+y_pred5=rf.predict(X_test)
+accuracy_score(y_test,y_pred5)
+precision_score(y_test,y_pred5)
+recall_score(y_test,y_pred5)
+f1_score(y_test,y_pred5)
+
+## Gradient Boosting Gradient
+
+from sklearn.ensemble import GradientBoostingClassifier
+gbc=GradientBoostingClassifier()
+gbc.fit(X_train,y_train)
+y_pred6=gbc.predict(X_test)
+accuracy_score(y_test,y_pred6)
+precision_score(y_test,y_pred6)
+recall_score(y_test,y_pred6)
+f1_score(y_test,y_pred6)
+
+final_data= pd.DataFrame({'Models':["LR","SVC","KNN","DT","RF","GBC"],
+                         "ACC":[accuracy_score(y_test,y_pred1),
+                               accuracy_score(y_test,y_pred2),
+                               accuracy_score(y_test,y_pred3),
+                               accuracy_score(y_test,y_pred4),
+                               accuracy_score(y_test,y_pred5),
+                               accuracy_score(y_test,y_pred6)]})
+#st.write('final_data')
+
+## Saving the model
+
+X_res=sc.fit_transform(X_res)
+model = rf.fit(X_res,y_res)
+
+# saving the model
 import pickle
-st.text_input("Age")
-st.text_input("CreditScore")
-st.text_input("NumOfProducts")
-st.text_input("Geography")
-st.text_input("Gender")
-st.text_input("IsActiveMember")
-st.text_input("EStimatedSalary")
-st.text_input("Tenure")
+pickle_out = open("classifier.pkl", mode = "wb")
+pickle.dump(model, pickle_out)
+pickle_out.close()
+
+pickle_in = open('classifier.pkl', 'rb')
+classifier = pickle.load(pickle_in)
+model = pickle.load(open('classifier.pkl', 'rb'))
+html_temp = """
+<div style ="background-color:#025246 ;padding:10px">
+<h2 style="color:white;text-align:center;">Bank Churn Prediction ML App</h2>
+</div>
+"""
+st.subheader('The app shows whether a customer will churn or not.')
+st.markdown(html_temp, unsafe_allow_html=True)
+
+Age = st.number_input("Age")
+Tenure = st.number_input("Tenure", )
+Balance = st.number_input("Balance")
+HasCrCard = st.selectbox("Has Credit Card", options=['No','Yes'])
+EstimatedSalary = st.number_input("Estimated Salary")
+NumOfProducts = st.number_input("Number of Products")
+IsActiveMember = st.selectbox("Is an active member", options=['No','Yes'])
+CreditScore = st.number_input("Credit Score")
+Gender = st.selectbox("Gender", options=['Male', 'Female'])
+Geography = st.selectbox("Geography", options=['Germany', 'France', 'Spain'])
+
+
+safe_html = """
+<div style ="background-color:#F4D03F;padding:10px>
+<h2 style="color:white; text-align:center;">Customer will not exit</h2>
+</div>
+"""
+danger_html = """
+<div style ="background-color:#F4D03F;padding:10px>
+<h2 style="color:white; text-align:center;">Customer will exit</h2>
+</div>
+"""
+
+
+def predict_cust(Age, Tenure, Balance, HasCrCard, EstimatedSalary, NumOfProducts, IsActiveMember, CreditScore,Gender, Geography):
+      input = np.array([[Age, Tenure, Balance, HasCrCard, EstimatedSalary, NumOfProducts, IsActiveMember, CreditScore]]).astype(np.float64)
+      input = np.array([[Gender, Geography,IsActiveMember]]).astype(np.object)
+      prediction = model.predict_proba(input)
+      pred = np.argmax(prediction)
+      return pred
+
+
+if st.button("Predict"):
+      output = predict_cust(Age, Tenure, Balance, HasCrCard, EstimatedSalary, NumOfProducts, IsActiveMember, CreditScore, Gender, Geography)
+      st.success("The verdict{}".format(output))
+
+      if output == 0:
+            st.markdown(safe_html, unsafe_allow_html=True)
+      else:
+            st.markdown(danger_html, unsafe_allow_html=True)
