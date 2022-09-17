@@ -57,70 +57,71 @@ y=data['Exited']
 
 ##Logistic Regression
 
-from sklearn.linear_model import LogisticRegression
-lr=LogisticRegression()
-lr.fit(X_train, y_train)
+#from sklearn.linear_model import LogisticRegression
+#lr=LogisticRegression()
+#lr.fit(X_train, y_train)
 
-y_pred1=lr.predict(X_test)
+#y_pred1=lr.predict(X_test)
 
-from sklearn.metrics import precision_score, recall_score,f1_score,accuracy_score
-accuracy_score(y_test,y_pred1)
-precision_score(y_test,y_pred1)
-recall_score(y_test,y_pred1)
-f1_score(y_test,y_pred1)
+#from sklearn.metrics import precision_score, recall_score,f1_score,accuracy_score
+#accuracy_score(y_test,y_pred1)
+#precision_score(y_test,y_pred1)
+#recall_score(y_test,y_pred1)
+#f1_score(y_test,y_pred1)
 ## SVC
-from sklearn import svm
-svm = svm.SVC()
-svm.fit(X_train, y_train)
-y_pred2 = svm.predict(X_test)
-accuracy_score(y_test,y_pred2)
-precision_score(y_test,y_pred2)
-recall_score(y_test,y_pred2)
+#from sklearn import svm
+#svm = svm.SVC()
+#svm.fit(X_train, y_train)
+#y_pred2 = svm.predict(X_test)
+#accuracy_score(y_test,y_pred2)
+#precision_score(y_test,y_pred2)
+##recall_score(y_test,y_pred2)
 f1_score(y_test,y_pred2)
 
 ##KNeighbors Classifier
-from sklearn.neighbors import KNeighborsClassifier
-knn=KNeighborsClassifier()
-knn.fit(X_train, y_train)
-y_pred3=knn.predict(X_test)
-accuracy_score(y_test,y_pred3)
-precision_score(y_test,y_pred3)
-recall_score(y_test,y_pred3)
-f1_score(y_test,y_pred3)
+#from sklearn.neighbors import KNeighborsClassifier
+#knn=KNeighborsClassifier()
+#knn.fit(X_train, y_train)
+#knn.fit(X_train, y_train)
+#y_pred3=knn.predict(X_test)
+#accuracy_score(y_test,y_pred3)
+#precision_score(y_test,y_pred3)
+#recall_score(y_test,y_pred3)
+#f1_score(y_test,y_pred3)
 
 ##DecisionTreeClassifier
 
-from sklearn.tree import DecisionTreeClassifier
-dt=DecisionTreeClassifier()
-dt.fit(X_train, y_train)
-y_pred4=dt.predict(X_test)
-accuracy_score(y_test,y_pred4)
-precision_score(y_test,y_pred4)
-recall_score(y_test,y_pred4)
-f1_score(y_test,y_pred4)
+#from sklearn.tree import DecisionTreeClassifier
+#dt=DecisionTreeClassifier()
+#dt.fit(X_train, y_train)
+#y_pred4=dt.predict(X_test)
+#accuracy_score(y_test,y_pred4)
+#precision_score(y_test,y_pred4)
+#recall_score(y_test,y_pred4)
+#f1_score(y_test,y_pred4)
 
 ##RandomForestClassifier
-from sklearn.ensemble import RandomForestClassifier
-rf=RandomForestClassifier()
-rf.fit(X_train,y_train)
-y_pred5=rf.predict(X_test)
-accuracy_score(y_test,y_pred5)
-precision_score(y_test,y_pred5)
-recall_score(y_test,y_pred5)
-f1_score(y_test,y_pred5)
+#from sklearn.ensemble import RandomForestClassifier
+#rf=RandomForestClassifier()
+#rf.fit(X_train,y_train)
+#y_pred5=rf.predict(X_test)
+#accuracy_score(y_test,y_pred5)
+#precision_score(y_test,y_pred5)
+#recall_score(y_test,y_pred5)
+#f1_score(y_test,y_pred5)
 
 ## Gradient Boosting Gradient
 
-from sklearn.ensemble import GradientBoostingClassifier
-gbc=GradientBoostingClassifier()
-gbc.fit(X_train,y_train)
-y_pred6=gbc.predict(X_test)
-accuracy_score(y_test,y_pred6)
-precision_score(y_test,y_pred6)
-recall_score(y_test,y_pred6)
-f1_score(y_test,y_pred6)
+#from sklearn.ensemble import GradientBoostingClassifier
+#gbc=GradientBoostingClassifier()
+#gbc.fit(X_train,y_train)
+#y_pred6=gbc.predict(X_test)
+#accuracy_score(y_test,y_pred6)
+#precision_score(y_test,y_pred6)
+#recall_score(y_test,y_pred6)
+#f1_score(y_test,y_pred6)
 
-final_data= pd.DataFrame({'Models':["LR","SVC","KNN","DT","RF","GBC"],
+#final_data= pd.DataFrame({'Models':["LR","SVC","KNN","DT","RF","GBC"],
                          "ACC":[accuracy_score(y_test,y_pred1),
                                accuracy_score(y_test,y_pred2),
                                accuracy_score(y_test,y_pred3),
@@ -131,18 +132,18 @@ final_data= pd.DataFrame({'Models':["LR","SVC","KNN","DT","RF","GBC"],
 
 ## Saving the model
 
-X_res=sc.fit_transform(X_res)
-model = rf.fit(X_res,y_res)
+#X_res=sc.fit_transform(X_res)
+#model = rf.fit(X_res,y_res)
 
 # saving the model
-import pickle
-pickle_out = open("classifier.pkl", mode = "wb")
-pickle.dump(model, pickle_out)
-pickle_out.close()
+#import pickle
+#pickle_out = open("classifier.pkl", mode = "wb")
+#pickle.dump(model, pickle_out)
+##pickle_out.close()
 
-pickle_in = open('classifier.pkl', 'rb')
-classifier = pickle.load(pickle_in)
-model = pickle.load(open('classifier.pkl', 'rb'))
+#pickle_in = open('classifier.pkl', 'rb')
+#classifier = pickle.load(pickle_in)
+#model = pickle.load(open('classifier.pkl', 'rb'))
 html_temp = """
 <div style ="background-color:#025246 ;padding:10px">
 <h2 style="color:white;text-align:center;">Bank Churn Prediction ML App</h2>
