@@ -76,7 +76,7 @@ y=data['Exited']
 #accuracy_score(y_test,y_pred2)
 #precision_score(y_test,y_pred2)
 ##recall_score(y_test,y_pred2)
-f1_score(y_test,y_pred2)
+#f1_score(y_test,y_pred2)
 
 ##KNeighbors Classifier
 #from sklearn.neighbors import KNeighborsClassifier
