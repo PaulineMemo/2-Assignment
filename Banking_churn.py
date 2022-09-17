@@ -1,6 +1,5 @@
 import pandas as pd
 import streamlit as st
-from Tools.scripts.parseentities import writefile
 import numpy as np
 
 st.set_page_config(layout="wide", initial_sidebar_state="expanded",
